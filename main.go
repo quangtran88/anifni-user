@@ -14,7 +14,7 @@ type server struct {
 	userGRPC.UnimplementedUserServiceServer
 }
 
-func (s server) Ping(ctx context.Context, message *userGRPC.PingMessage) (*userGRPC.PingResult, error) {
+func (s server) Ping(ctx context.Context, message *userGRPC.PingInput) (*userGRPC.PingResult, error) {
 	return &userGRPC.PingResult{Message: "Pong"}, nil
 }
 
