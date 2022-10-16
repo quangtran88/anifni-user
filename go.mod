@@ -4,6 +4,8 @@ go 1.19
 
 require (
 	github.com/quangtran88/anifni-grpc v1.0.2
+	github.com/stretchr/testify v1.8.0
+	golang.org/x/crypto v0.0.0-20221012134737-56aed061732a
 	google.golang.org/grpc v1.50.0
 )
 
@@ -12,8 +14,6 @@ require (
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/stretchr/objx v0.4.0 // indirect
-	github.com/stretchr/testify v1.8.0 // indirect
-	golang.org/x/crypto v0.0.0-20221012134737-56aed061732a // indirect
 	golang.org/x/net v0.0.0-20211112202133-69e39bad7dc2 // indirect
 	golang.org/x/sys v0.0.0-20210615035016-665e8c7367d1 // indirect
 	golang.org/x/text v0.3.6 // indirect
