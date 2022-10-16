@@ -4,13 +4,19 @@ import (
 	userGRPC "github.com/quangtran88/anifni-grpc/user"
 	"github.com/quangtran88/anifni-user/adapters/controllers/grpc/handlers"
 	"github.com/quangtran88/anifni-user/adapters/repositories"
+	serviceAdapter "github.com/quangtran88/anifni-user/adapters/services"
 	"github.com/quangtran88/anifni-user/core/services"
 	"google.golang.org/grpc"
 )
 
 func InitGRPCServices(s *grpc.Server) {
 	userRepo := repositories.NewUserRepository()
-	userService := services.NewUserService(userRepo)
+
+	authService := serviceAdapter.NewAuthenticationService()
+	tokenService := serviceAdapter.NewTokenService()
+
+	userService := services.NewUserService(userRepo, authService, tokenService)
+
 	userHandler := grpcHandler.NewUserHandler(userService)
 
 	userGRPC.RegisterUserServiceServer(s, userHandler)
