@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	grpcHandler "github.com/quangtran88/anifni-user/adapters/controllers/grpc"
+	grpcHandler "github.com/quangtran88/anifni-user/adapters/handlers/grpc"
 	"google.golang.org/grpc"
 	"log"
 	"net"

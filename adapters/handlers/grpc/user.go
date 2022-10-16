@@ -20,7 +20,7 @@ func (_ UserHandler) Ping(_ context.Context, _ *userGRPC.PingInput) (*userGRPC.P
 	return &userGRPC.PingResult{Message: "Pong"}, nil
 }
 
-func (handler UserHandler) GetUser(ctx context.Context, input *userGRPC.GetUserInput) (*userGRPC.GetUserResult, error) {
+func (handler UserHandler) GetUser(_ context.Context, input *userGRPC.GetUserInput) (*userGRPC.GetUserResult, error) {
 	user, err := handler.userService.Get(domain.ID(input.GetId()))
 	if err != nil {
 		return nil, err

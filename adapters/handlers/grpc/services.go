@@ -2,7 +2,6 @@ package grpcHandler
 
 import (
 	userGRPC "github.com/quangtran88/anifni-grpc/user"
-	"github.com/quangtran88/anifni-user/adapters/controllers/grpc/handlers"
 	"github.com/quangtran88/anifni-user/adapters/repositories"
 	serviceAdapter "github.com/quangtran88/anifni-user/adapters/services"
 	"github.com/quangtran88/anifni-user/core/services"
@@ -17,7 +16,7 @@ func InitGRPCServices(s *grpc.Server) {
 
 	userService := services.NewUserService(userRepo, authService, tokenService)
 
-	userHandler := grpcHandler.NewUserHandler(userService)
+	userHandler := NewUserHandler(userService)
 
 	userGRPC.RegisterUserServiceServer(s, userHandler)
 }
