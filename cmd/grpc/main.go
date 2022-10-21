@@ -2,6 +2,9 @@ package main
 
 import (
 	"fmt"
+	"github.com/joho/godotenv"
+	baseConstants "github.com/quangtran88/anifni-base/libs/constants"
+	baseUtils "github.com/quangtran88/anifni-base/libs/utils"
 	grpcHandler "github.com/quangtran88/anifni-user/adapters/handlers/grpc"
 	"google.golang.org/grpc"
 	"log"
@@ -9,7 +12,9 @@ import (
 )
 
 func main() {
-	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", 6000))
+	err := godotenv.Load()
+	env := baseUtils.GetEnvManager()
+	lis, err := net.Listen("tcp", fmt.Sprintf(":%s", env.GetEnv(baseConstants.GRPCPortEnvKey)))
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}

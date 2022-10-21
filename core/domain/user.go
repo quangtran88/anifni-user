@@ -1,11 +1,12 @@
 package domain
 
-const UserTokenDomain = "U"
-const UserTokenLength = 5
+import (
+	"fmt"
+)
 
 type User struct {
 	Id            ID
-	PId           PID
+	Pid           PID
 	Name          string
 	LastName      string
 	FirstName     string
@@ -18,8 +19,20 @@ type User struct {
 	Staff         Staff
 }
 
-type RegisterUserInput struct {
-	OTPCode   string
+func NewUser(in CreateUserInput) *User {
+	return &User{
+		Pid:       in.Pid,
+		Name:      fmt.Sprintf("%s %s", in.FirstName, in.LastName),
+		LastName:  in.LastName,
+		FirstName: in.FirstName,
+		Email:     in.Email,
+		Password:  in.Password,
+		Blocked:   false,
+	}
+}
+
+type CreateUserInput struct {
+	Pid       PID
 	Email     string
 	Password  string
 	LastName  string

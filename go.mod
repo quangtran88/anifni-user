@@ -3,7 +3,9 @@ module github.com/quangtran88/anifni-user
 go 1.19
 
 require (
-	github.com/quangtran88/anifni-grpc v1.0.2
+	github.com/joho/godotenv v1.4.0
+	github.com/quangtran88/anifni-base v1.0.4
+	github.com/quangtran88/anifni-grpc v1.2.1
 	github.com/stretchr/testify v1.8.0
 	golang.org/x/crypto v0.0.0-20221012134737-56aed061732a
 	google.golang.org/grpc v1.50.0

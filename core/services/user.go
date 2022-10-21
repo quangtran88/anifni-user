@@ -1,71 +1,53 @@
 package services
 
 import (
-	"errors"
-	"fmt"
+	"context"
 	"github.com/quangtran88/anifni-user/core/domain"
 	"github.com/quangtran88/anifni-user/core/ports"
-	"github.com/quangtran88/anifni-user/utils"
 )
 
 type UserService struct {
-	repo     ports.UserRepository
-	authSrv  ports.AuthenticationService
-	tokenSrv ports.TokenService
+	repo ports.UserRepository
+	hash ports.HashGenerator
 }
 
 func NewUserService(
 	repo ports.UserRepository,
-	authSrv ports.AuthenticationService,
-	tokenSrv ports.TokenService,
+	hash ports.HashGenerator,
 ) *UserService {
-	return &UserService{repo: repo, authSrv: authSrv, tokenSrv: tokenSrv}
+	return &UserService{repo, hash}
 }
 
-func (srv UserService) Get(id domain.ID) (domain.User, error) {
-	return srv.repo.FindById(id)
+func (srv UserService) Get(ctx context.Context, id domain.ID) (domain.User, error) {
+	user, err := srv.repo.FindById(ctx, id)
+	return *user, err
 }
 
-func (srv UserService) Register(input domain.RegisterUserInput) (domain.User, error) {
-	err := srv.checkOTP(input.OTPCode, input.Email)
+func (srv UserService) CheckDuplicated(ctx context.Context, email string) (bool, error) {
+	existed, err := srv.repo.FindByEmail(ctx, email)
 	if err != nil {
-		return domain.User{}, err
+		return false, err
 	}
-
-	pid, err := srv.tokenSrv.GetToken(domain.UserTokenDomain, domain.UserTokenLength)
-	if err != nil {
-		return domain.User{}, err
+	if existed == nil {
+		return true, nil
 	}
-
-	hashedPassword, err := utils.HashPassword(input.Password)
-	if err != nil {
-		return domain.User{}, err
-	}
-
-	user := domain.User{
-		PId:       domain.PID(pid),
-		Email:     input.Email,
-		FirstName: input.FirstName,
-		LastName:  input.LastName,
-		Name:      fmt.Sprintf("%s %s", input.FirstName, input.LastName),
-		Password:  hashedPassword,
-	}
-	id, err := srv.repo.Create(user)
-	if err != nil {
-		return domain.User{}, err
-	}
-
-	user.Id = id
-	return user, nil
+	return false, nil
 }
 
-func (srv UserService) checkOTP(code string, email string) error {
-	ok, err := srv.authSrv.CheckEmailOTP(code, email)
+func (srv UserService) Create(ctx context.Context, in domain.CreateUserInput) (domain.User, error) {
+	hashedPassword, err := srv.hash.HashPassword(in.Password)
 	if err != nil {
-		return err
+		return domain.User{}, err
 	}
-	if !ok {
-		return errors.New("OTP code invalid")
+
+	in.Password = hashedPassword
+	user := domain.NewUser(in)
+
+	createdId, err := srv.repo.Create(ctx, *user)
+	if err != nil {
+		return domain.User{}, err
 	}
-	return nil
+
+	user.Id = createdId
+	return *user, nil
 }
